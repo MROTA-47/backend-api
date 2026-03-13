@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "root",
+    "password": "1234",
+    "database": "db_tienda",
+    "host": "localhost",
+    "port": 3388,
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "1234",
+    "database": "db_tienda",
+    "host": "localhost",
+    "port": 3388,
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "1234",
+    "database": "db_tienda",
+    "host": "localhost",
+    "port": 3388,
+    "dialect": "mysql"
+  }
+}

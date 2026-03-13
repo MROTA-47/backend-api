@@ -1,0 +1,20 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno
+.env
+
+# Logs
+npm-debug.log*
+*.log
+
+# Archivos de build
+dist/
+build/
+
+# IDE
+.vscode/
+.DS_Store
+Thumbs.db
+
+sequelize model:create --name tbc_usuarios --attributes nombre:string, direccion:string, password:string, email:string, telefono:string, rol:string,

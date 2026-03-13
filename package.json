@@ -1,0 +1,35 @@
+{
+  "name": "backend-api",
+  "version": "1.0.0",
+  "description": "API REST con Express",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"No tests specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MROTA-47/backend-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MROTA-47/backend-api/issues"
+  },
+  "homepage": "https://github.com/MROTA-47/backend-api#readme",
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "morgan": "^1.10.1",
+    "mysql2": "^3.19.1",
+    "sequelize": "^6.37.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
+
