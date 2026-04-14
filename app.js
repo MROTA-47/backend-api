@@ -2,30 +2,52 @@ const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const http = require('http');
+const axios = require('axios');
 
 const app = express();
 
-// logs en consola
 app.use(logger('dev'));
-
-// parsear datos
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// ruta principal
+app.get('/productos', async (req, res) => {
+  const r = await axios.get('https://fakestoreapi.com/products');
+  res.json(r.data);
+});
+
+app.get('/categorias', async (req, res) => {
+  const r = await axios.get('https://fakestoreapi.com/products/categories');
+  res.json(r.data);
+});
+
+app.get('/usuarios', async (req, res) => {
+  const r = await axios.get('https://fakestoreapi.com/users');
+  res.json(r.data);
+});
+
+app.get('/carritos', async (req, res) => {
+  const r = await axios.get('https://fakestoreapi.com/carts');
+  res.json(r.data);
+});
+
+app.get('/carritodetalle/:id', async (req, res) => {
+  const r = await axios.get(`https://fakestoreapi.com/carts/${req.params.id}`);
+  res.json(r.data);
+});
+
 app.get('/', (req, res) => {
-  res.status(200).send({
-    message: 'Bienvenido a mi API REST'
+  res.json({
+    endpoints: [
+      '/productos',
+      '/categorias',
+      '/usuarios',
+      '/carritos',
+      '/carritodetalle/:id'
+    ]
   });
 });
 
-// puerto del servidor
-const port = process.env.PORT || 8000;
-
-// crear servidor
-const server = http.createServer(app);
-
-// iniciar servidor
-server.listen(port, () => {
-  console.log(`Servidor corriendo en http://localhost:${port}`);
+const port = 8000;
+http.createServer(app).listen(port, () => {
+  console.log(`Servidor en http://localhost:${port}`);
 });
