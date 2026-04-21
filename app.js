@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -13,7 +14,33 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const API_URL = 'https://fakestoreapi.com';
 
+function verificarToken(req, res, next) {
+  const header = req.headers['authorization'];
 
+  if (!header) {
+    return res.status(403).json({ error: 'Token requerido' });
+  }
+
+  const token = header.split(' ')[1];
+
+  jwt.verify(token, 'secreto', (err, data) => {
+    if (err) {
+      return res.status(401).json({ error: 'Token inválido' });
+    }
+    next();
+  });
+}
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === 'admin' && password === '1234') {
+    const token = jwt.sign({ user: username }, 'secreto', { expiresIn: '1h' });
+    res.json({ token });
+  } else {
+    res.status(401).json({ error: 'Datos incorrectos' });
+  }
+});
 
 app.get('/productos', async (req, res) => {
   try {
@@ -24,7 +51,6 @@ app.get('/productos', async (req, res) => {
   }
 });
 
-
 app.get('/productos/:id', async (req, res) => {
   try {
     const r = await axios.get(`${API_URL}/products/${req.params.id}`);
@@ -33,8 +59,6 @@ app.get('/productos/:id', async (req, res) => {
     res.status(500).json({ error: 'Error producto' });
   }
 });
-
-
 
 app.get('/usuarios', async (req, res) => {
   try {
@@ -63,7 +87,6 @@ app.get('/carritos', async (req, res) => {
   }
 });
 
-
 app.get('/carritos/:id', async (req, res) => {
   try {
     const r = await axios.get(`${API_URL}/carts/${req.params.id}`);
@@ -72,8 +95,6 @@ app.get('/carritos/:id', async (req, res) => {
     res.status(500).json({ error: 'Error carrito' });
   }
 });
-
-
 
 app.get('/guardar-productos', async (req, res) => {
   try {
@@ -140,9 +161,7 @@ app.get('/guardar-productos/:id', async (req, res) => {
   }
 });
 
-
-
-app.get('/productos-db', (req, res) => {
+app.get('/productos-db', verificarToken, (req, res) => {
   db.query('SELECT * FROM productos', (err, results) => {
     if (err) {
       return res.status(500).json({ error: 'Error BD' });
@@ -151,8 +170,7 @@ app.get('/productos-db', (req, res) => {
   });
 });
 
-
-app.get('/productos-db/:id', (req, res) => {
+app.get('/productos-db/:id', verificarToken, (req, res) => {
   const id = req.params.id;
 
   db.query('SELECT * FROM productos WHERE id = ?', [id], (err, results) => {
@@ -168,12 +186,11 @@ app.get('/productos-db/:id', (req, res) => {
   });
 });
 
-
-
 app.get('/', (req, res) => {
   res.json({
     mensaje: 'API COMPLETA ',
     endpoints: [
+      '/login',
       '/productos',
       '/productos/:id',
       '/usuarios',
@@ -188,10 +205,8 @@ app.get('/', (req, res) => {
   });
 });
 
-
-
 const port = 8000;
 
 http.createServer(app).listen(port, () => {
-  console.log(` http://localhost:${port}`);
+  console.log(`http://localhost:${port}`);
 });
